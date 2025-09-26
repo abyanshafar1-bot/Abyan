@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a2e;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-sm flex flex-col items-center space-y-6">
+        <h1 class="text-4xl font-bold text-center text-purple-400 drop-shadow-lg">Guess the Number!</h1>
+        <p class="text-center text-lg text-gray-300">I'm thinking of a number between 1 and 100. Can you guess it?</p>
+
+        <input type="number" id="guessInput" placeholder="Enter your guess"
+               class="w-full px-4 py-3 rounded-xl bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300">
+        
+        <button id="submitGuess"
+                class="w-full py-3 rounded-xl bg-purple-600 text-white font-bold text-lg shadow-lg hover:bg-purple-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800">
+            Submit Guess
+        </button>
+
+        <p id="message" class="text-xl text-center font-semibold text-white min-h-[2rem]"></p>
+        
+        <button id="restartGame"
+                class="w-full py-3 rounded-xl bg-gray-600 text-white font-bold text-lg shadow-lg hover:bg-gray-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 hidden">
+            Play Again
+        </button>
+    </div>
+
+    <script>
+        const guessInput = document.getElementById('guessInput');
+        const submitGuessBtn = document.getElementById('submitGuess');
+        const restartGameBtn = document.getElementById('restartGame');
+        const messageDisplay = document.getElementById('message');
+
+        let secretNumber;
+        let attempts;
+
+        // Function to set up the game
+        function initializeGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            messageDisplay.textContent = '';
+            guessInput.value = '';
+            guessInput.disabled = false;
+            submitGuessBtn.disabled = false;
+            restartGameBtn.classList.add('hidden');
+            guessInput.focus();
+        }
+
+        // Event handler for the submit button
+        submitGuessBtn.addEventListener('click', () => {
+            const userGuess = parseInt(guessInput.value);
+
+            // Basic input validation
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+                messageDisplay.textContent = 'Please enter a valid number between 1 and 100.';
+                messageDisplay.style.color = '#e0a0a0';
+                return;
+            }
+
+            attempts++;
+
+            if (userGuess === secretNumber) {
+                messageDisplay.textContent = `You got it! The number was ${secretNumber}. It took you ${attempts} attempts.`;
+                messageDisplay.style.color = '#a0e0a0';
+                guessInput.disabled = true;
+                submitGuessBtn.disabled = true;
+                restartGameBtn.classList.remove('hidden');
+            } else if (userGuess > secretNumber) {
+                messageDisplay.textContent = 'Too high! Try again.';
+                messageDisplay.style.color = '#e0e0e0';
+            } else {
+                messageDisplay.textContent = 'Too low! Try again.';
+                messageDisplay.style.color = '#e0e0e0';
+            }
+            guessInput.value = '';
+        });
+
+        // Event handler for the restart button
+        restartGameBtn.addEventListener('click', initializeGame);
+
+        // Initialize the game when the page loads
+        initializeGame();
+    </script>
+</body>
+</html>
